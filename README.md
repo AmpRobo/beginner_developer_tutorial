@@ -1,34 +1,32 @@
-# dummy_tutorial_for_developer
-Dummy Tutorial for Developer
+# Beginner Developer Tutorial
 
-# Device List
-## Raspberry Pi Pico W/WH
-买两个，W和WH各一个，自己练习一下焊接电路板。
+Step-by-step guides for development setup on Ubuntu, embedded targets, and common tooling. Below is a short summary of each instruction file in this repository.
 
-## 创芯科技can卡 CANalyst-II分析仪 Linux版
-Materials: https://www.zhcxgd.com/h-nd-77.html
+## Instruction files (summary)
 
-https://item.taobao.com/item.htm?abbucket=16&id=624582531338&ns=1&pisk=fb_-KtmaK-2o0XcxDDZD-Fo-yfVD9wCzET5s-pvoAtBAOK03aUqeJ9pALLxkPL0pJ6BFK9CUaB9Cd9phqo4Ga_8eRRvLSPfrowmDSTdWAjNB9CiQyrq0N_8eRJhmRl4OaOnJM6vBOINvtBAWd99WlE929biCdLtjhCdwReTCdE9XTBpId0gScm92sBgBN2tjlBOKP4gCdsNvTAdxyphWQ2IQlvoImWnZfc_vG7JFwAueGadJFdC5y0i7TQKJC_94IRZ3nn1evwlEJK15b9R1FYwM46sAHQLLo0T1MM69gaaieISlG1vf6X0haUQl9L67x7fAJLK1PnhL_sL2O9td0R3MwUjvXaIzTx15ILI6z6cTEsKODhRXcXnWrGfG8h_7yAJDbBBknOaskEtC4N_GWycmIddnVSFxYD-WgUDeyNhKz252MdVV3DoeDIRvISFxYD-WgIpggEoEYndV.&priceTId=2100c80317255342624564242e0be2&skuId=4586467510049&spm=a21n57.1.item.2.1196523cZH52oL&utparam=%7B%22aplus_abtest%22:%22aee9934c633e6857fae255c7c8ed2e84%22%7D
+| File | What it covers |
+|------|----------------|
+| [`ubuntu_setup.md`](ubuntu_setup.md) | **Ubuntu 24.04 onboarding:** install and first steps, basic shell commands, Git/GitHub basics, Xiao RP2350 and **Zephyr** (SDK layout, build, UF2 flash), **STM32** toolchain and CubeIDE, **Anaconda**, **PyTorch** (CUDA vs CPU), **YOLO**, browsers and VPN pointers, and editors (**VS Code**, **Octave**).References [`setup-dev-env.sh`](setup_dev_env.sh) for automated setup. |
+| [`ubuntu_program_tools.md`](ubuntu_program_tools.md) | Links for **Remmina** / remote desktop; **Byobu**; **SerialPortAssistant** and serial permissions; a Linux proxy-bypass wiki link; checking **CPU temperature** from sysfs. |
+| [`git.md`](git.md) | Install **git**, global user/email, **GitHub SSH** (ed25519), **conventional-style commit prefixes** (`feat:`, `fix:`, etc.), branch/PR workflow (clone via SSH, feature branch, push, merge request), and everyday **git** commands. |
+| [`vscode.md`](vscode.md) | Install VS Code from App Center. **VS Code** plugins: **LaTeX Workshop**, **Markdown All in One** (TOC commands), **Draw.io Integration** and **Markdown Table Prettifier**. |
+| [`clang_format_usage.md`](clang_format_usage.md) | Install **clang-format**, in-place formatting, built-in styles (LLVM, Google, …), generating **`.clang-format`**, and formatting many files with **find** + **xargs**. |
+| [`remote_desktop.md`](remote_desktop.md) | **xrdp** on Ubuntu (install, service, **ufw** port 3389) and connecting from Windows/macOS/Linux RDP clients; session type **Xorg**. |
+| [`windows_program_tools.md`](windows_program_tools.md) | **PuTTY:** clearing saved sessions with `putty.exe -cleanup`. |
+| [`website_development.md`](website_development.md) | **Node.js/npm** on Ubuntu, a **React landing page** template link, **`npm install`**, **`npm run build`**, serving with **`serve`**, and **`npm start`**. |
+| [`ros2.md`](ros2.md) | **ROS 2 Jazzy** on Ubuntu: **`ros2 run demo_nodes_cpp talker`**, **`colcon build`** (workspace, symlink install, package select), and basic verification. |
+| [`realsense.md`](realsense.md) | Build **Intel RealSense librealsense** from source (deps, clone, **udev** rules, cmake install, optional kernel patch script), **`lsusb`** check, and **`realsense-viewer`**. |
+| [`pinocchio.md`](pinocchio.md) | **Pinocchio** robotics library: **Pixi**, **eigenpy** and **example-robot-data** from source, then build Pinocchio from upstream with links. |
+| [`nuttx.md`](nuttx.md) | Short **NuttX** note: replacing or relocating **`apps/`** via **`CONFIG_APPS_DIR`** (out-of-tree apps, per Apache NuttX docs). |
+| [`nuttx_driver_porting_guide.md`](nuttx_driver_porting_guide.md) | Long **NuttX driver porting** guide using **ICM42688** on **Raspberry Pi Pico W**: RTOS vs Linux, Kconfig/Make flow, **I2C** driver skeleton, board bringup, **defconfig**, test app, flash/serial test, troubleshooting, and links to reference material (includes Baidu disk link for example project). |
+| [`nvidia_jetson.md`](nvidia_jetson.md) | **Jetson Orin NX** hardware links, **JetPack** via SDK Manager reference, and disabling deep sleep by setting **`SuspendMode=freeze`** in **`/etc/systemd/sleep.conf`**. |
+| [`radxa.md`](radxa.md) | **Radxa** boards: **`u-boot-install`** and **`ubuntu-rockchip-install`** to eMMC/SD, **Ubuntu 24.04** on Zero **3W/3E**, **ROS2** Rolling/Jazzy mention, and pointers to **netplan**, **ubuntu-rockchip** wiki, and Radxa device-tree docs. |
 
-## MCP2515 CAN Module
-两个
+## Scripts and extras (not Markdown)
 
-https://item.taobao.com/item.htm?_u=59g672ob638&id=702622757730&spm=a1z09.2.0.0.37c52e8dM3gBdP
+- **[`install_ros2.sh`](install_ros2.sh)** — Automates ROS 2 installation (see [`ros2.md`](ros2.md)).
+- **`new_ubuntu_enviroment_setup/`** — Contains [`new_ubuntu_enviroment_setup.sh`](new_ubuntu_enviroment_setup/new_ubuntu_enviroment_setup.sh), CUDA install helpers, and apt `source*.list` files for a fresh Ubuntu environment (see [`dummy_beginner.md`](dummy_beginner.md)).
 
-## N100不带外壳版
-https://detail.tmall.com/item.htm?_u=59g672o305c&id=645061129098&spm=a1z09.2.0.0.37c52e8dM3gBdP
+For full commands and details, open the linked file; the table above is only an index.
 
-## 杜邦线
-20cm，买个五排
-
-# Github
-## Github SSH PublicKey
-Use the URL below to set the public key for SSH: https://docs.github.com/en/authentication
-
-## Github Submodule
-```sh
-# Add submodule
-git submodule add https://github.com/raspberrypi/pico-examples.git pico-examples
-# Remove submodule
-git rm --cached pico-examples
-```
+<!-- | [`ubuntu_environment_setup.md`](ubuntu_environment_setup.md) | **GitHub** SSH keys and **submodules**; **OpenSSH** server and firewall; terminal colors in `~/.bashrc`; **Fcitx5** for Chinese/Japanese input; **TeXstudio** + **texlive-full** and dark-theme tips; **OpenGL/Mesa** dev packages; **eGPU** (Thunderbolt, NVIDIA/AMD, `boltctl`, troubleshooting). | -->
