@@ -22,11 +22,11 @@ Step-by-step guides for development setup on Ubuntu, embedded targets, and commo
 | [`nvidia_jetson.md`](nvidia_jetson.md) | **Jetson Orin NX** hardware links, **JetPack** via SDK Manager reference, and disabling deep sleep by setting **`SuspendMode=freeze`** in **`/etc/systemd/sleep.conf`**. |
 | [`radxa.md`](radxa.md) | **Radxa** boards: **`u-boot-install`** and **`ubuntu-rockchip-install`** to eMMC/SD, **Ubuntu 24.04** on Zero **3W/3E**, **ROS2** Rolling/Jazzy mention, and pointers to **netplan**, **ubuntu-rockchip** wiki, and Radxa device-tree docs. |
 
-## Scripts and extras (not Markdown)
+<!-- ## Scripts and extras (not Markdown)
 
 - **[`install_ros2.sh`](install_ros2.sh)** — Automates ROS 2 installation (see [`ros2.md`](ros2.md)).
 - **`new_ubuntu_enviroment_setup/`** — Contains [`new_ubuntu_enviroment_setup.sh`](new_ubuntu_enviroment_setup/new_ubuntu_enviroment_setup.sh), CUDA install helpers, and apt `source*.list` files for a fresh Ubuntu environment (see [`dummy_beginner.md`](dummy_beginner.md)).
 
-For full commands and details, open the linked file; the table above is only an index.
+For full commands and details, open the linked file; the table above is only an index. -->
 
 <!-- | [`ubuntu_environment_setup.md`](ubuntu_environment_setup.md) | **GitHub** SSH keys and **submodules**; **OpenSSH** server and firewall; terminal colors in `~/.bashrc`; **Fcitx5** for Chinese/Japanese input; **TeXstudio** + **texlive-full** and dark-theme tips; **OpenGL/Mesa** dev packages; **eGPU** (Thunderbolt, NVIDIA/AMD, `boltctl`, troubleshooting). | -->
