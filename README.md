@@ -6,7 +6,7 @@ Step-by-step guides for development setup on Ubuntu, embedded targets, and commo
 
 | File | What it covers |
 |------|----------------|
-| [`ubuntu_setup.md`](ubuntu_setup.md) | **Ubuntu 24.04 onboarding:** install and first steps, basic shell commands, Git/GitHub basics, Xiao RP2350 and **Zephyr** (SDK layout, build, UF2 flash), **STM32** toolchain and CubeIDE, **Anaconda**, **PyTorch** (CUDA vs CPU), **YOLO**, browsers and VPN pointers, and editors (**VS Code**, **Octave**).References [`setup-dev-env.sh`](setup_dev_env.sh) for automated setup. |
+| [`ubuntu_setup.md`](ubuntu_setup.md) | **Ubuntu 24.04 onboarding:** install and first steps, basic shell commands, Git/GitHub basics, Xiao RP2350 and **Zephyr** (SDK layout, build, UF2 flash), **STM32** toolchain and CubeIDE, **Anaconda**, **PyTorch** (CUDA vs CPU), **YOLO**, browsers and VPN pointers, and editors (**VS Code**, **Octave**).References [`setup-dev-env.sh`](setup-dev-env.sh) for automated setup. |
 | [`ubuntu_program_tools.md`](ubuntu_program_tools.md) | Links for **Remmina** / remote desktop; **Byobu**; **SerialPortAssistant** and serial permissions; a Linux proxy-bypass wiki link; checking **CPU temperature** from sysfs. |
 | [`git.md`](git.md) | Install **git**, global user/email, **GitHub SSH** (ed25519), **conventional-style commit prefixes** (`feat:`, `fix:`, etc.), branch/PR workflow (clone via SSH, feature branch, push, merge request), and everyday **git** commands. |
 | [`vscode.md`](vscode.md) | Install VS Code from App Center. **VS Code** plugins: **LaTeX Workshop**, **Markdown All in One** (TOC commands), **Draw.io Integration** and **Markdown Table Prettifier**. |
