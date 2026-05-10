@@ -14,7 +14,7 @@ Step-by-step guides for development setup on Ubuntu, embedded targets, and commo
 | [`remote_desktop.md`](remote_desktop.md) | **xrdp** on Ubuntu (install, service, **ufw** port 3389) and connecting from Windows/macOS/Linux RDP clients; session type **Xorg**. |
 | [`windows_program_tools.md`](windows_program_tools.md) | **PuTTY:** clearing saved sessions with `putty.exe -cleanup`. |
 | [`website_development.md`](website_development.md) | **Node.js/npm** on Ubuntu, a **React landing page** template link, **`npm install`**, **`npm run build`**, serving with **`serve`**, and **`npm start`**. |
-| [`ros2.md`](ros2.md) | **ROS 2 Jazzy** on Ubuntu: **`ros2 run demo_nodes_cpp talker`**, **`colcon build`** (workspace, symlink install, package select), and basic verification. |
+| [`ros2.md`](ros2.md) | **ROS 2 Jazzy** on Ubuntu: **`ros2 run demo_nodes_cpp talker`**, **`colcon build`** (workspace, symlink install, package select), and basic verification. ROS2 tutorial: https://husarion.com/tutorials/ros2-tutorials/ros2/|
 | [`realsense.md`](realsense.md) | Build **Intel RealSense librealsense** from source (deps, clone, **udev** rules, cmake install, optional kernel patch script), **`lsusb`** check, and **`realsense-viewer`**. |
 | [`pinocchio.md`](pinocchio.md) | **Pinocchio** robotics library: **Pixi**, **eigenpy** and **example-robot-data** from source, then build Pinocchio from upstream with links. |
 | [`nuttx.md`](nuttx.md) | Short **NuttX** note: replacing or relocating **`apps/`** via **`CONFIG_APPS_DIR`** (out-of-tree apps, per Apache NuttX docs). |
