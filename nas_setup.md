@@ -1,6 +1,11 @@
 # NAS SSD Setup on Ubuntu Server 24.04
 
-## Overview
+## Installation
+```sh
+sudo apt-get install git fdisk net-tools dkms build-essential linux-headers-$(uname -r) network-manager rfkill iftop
+```
+
+## Setup SSD
 
 This guide covers:
 
@@ -14,7 +19,7 @@ This guide covers:
 
 ---
 
-## 1. Detect the SSD
+### 1. Detect the SSD
 
 ```bash
 lsblk
@@ -38,7 +43,7 @@ Assume the new SSD is `/dev/sdb`.
 
 ---
 
-## 2. Create a GPT Partition
+### 2. Create a GPT Partition
 
 ```bash
 sudo fdisk /dev/sdb
@@ -65,7 +70,7 @@ lsblk
 
 ---
 
-## 3. Format the SSD
+### 3. Format the SSD
 
 ```bash
 sudo mkfs.ext4 /dev/sdb1
@@ -73,18 +78,18 @@ sudo mkfs.ext4 /dev/sdb1
 
 ---
 
-## 4. Create a Mount Point
+### 4. Create a Mount Point
 
 ```bash
-sudo mkdir -p /data
+sudo mkdir -p /mnt/data
 ```
 
 ---
 
-## 5. Mount the SSD
+### 5. Mount the SSD
 
 ```bash
-sudo mount /dev/sdb1 /data
+sudo mount /dev/sdb1 /mnt/data
 ```
 
 Verify:
@@ -96,7 +101,7 @@ lsblk -f
 
 ---
 
-## 6. Configure Automatic Mounting
+### 6. Configure Automatic Mounting
 
 Get the UUID:
 
@@ -113,7 +118,7 @@ sudo nano /etc/fstab
 Add:
 
 ```text
-UUID=<your-uuid> /data ext4 defaults,nofail 0 2
+UUID=<your-uuid> /mnt/data ext4 defaults,nofail 0 2
 ```
 
 Test:
@@ -124,10 +129,10 @@ sudo mount -a
 
 ---
 
-## 7. Accessing the SSD
+### 7. Accessing the SSD
 
 ```bash
-cd /data
+cd /mnt/data
 ls
 ```
 
@@ -139,14 +144,13 @@ lsblk -f
 
 ---
 
-## 8. USB Wi‑Fi Setup
+## USB Wi‑Fi Setup
 
 Detect the adapter:
 
 ```bash
 lsusb
 ip link
-iw dev
 ```
 
 Check drivers:
@@ -181,34 +185,6 @@ Verify:
 ```bash
 nmcli connection show --active
 ip addr
-```
-
-### Netplan Alternative
-
-Edit:
-
-```bash
-sudo nano /etc/netplan/50-cloud-init.yaml
-```
-
-Example:
-
-```yaml
-network:
-  version: 2
-  wifis:
-    wlan0:
-      dhcp4: true
-      access-points:
-        "YourSSID":
-          password: "YourPassword"
-```
-
-Apply:
-
-```bash
-sudo netplan generate
-sudo netplan apply
 ```
 
 ---
