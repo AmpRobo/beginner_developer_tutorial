@@ -1,14 +1,45 @@
 # NAS SSD Setup on Ubuntu Server 24.04
 
-## Installation
+## Dependency Installation
+### General tools 
 ```sh
-sudo apt-get install git fdisk net-tools dkms build-essential linux-headers-$(uname -r) network-manager rfkill iftop
+sudo apt-get install git fdisk net-tools dkms build-essential rsnapshot linux-headers-$(uname -r) network-manager rfkill iftop
+```
+### Docker
+```sh
+# Install docker
+curl -fsSL https://get.docker.com | sudo sh
+
+# Version check
+docker --version
+
+# Add docker group
+sudo usermod -aG docker $USER
+
+# Log again
+newgrp docker
+
+# Test
+docker run hello-world
+
+# Check installation of Docker Compose
+docker compose version
+
+# Install if no feedback
+sudo apt install docker-compose-plugin
+```
+### Zerotier
+```sh
+# Install
+curl -s https://install.zerotier.com | sudo bash
+
+# Check staus
+sudo zerotier-cli info
 ```
 
 ## Setup SSD
 
 This guide covers:
-
 1. Detecting a new SSD
 2. Creating a partition table
 3. Formatting the SSD
@@ -16,8 +47,6 @@ This guide covers:
 5. Configuring automatic mounting
 6. Accessing the mounted storage
 7. Setting up a USB Wi‑Fi adapter
-
----
 
 ### 1. Detect the SSD
 
@@ -40,8 +69,6 @@ sdb      2T disk
 ```
 
 Assume the new SSD is `/dev/sdb`.
-
----
 
 ### 2. Create a GPT Partition
 
@@ -68,24 +95,17 @@ Verify:
 lsblk
 ```
 
----
-
 ### 3. Format the SSD
 
 ```bash
 sudo mkfs.ext4 /dev/sdb1
 ```
 
----
-
 ### 4. Create a Mount Point
 
 ```bash
 sudo mkdir -p /mnt/data
 ```
-
----
-
 ### 5. Mount the SSD
 
 ```bash
@@ -98,8 +118,6 @@ Verify:
 df -h
 lsblk -f
 ```
-
----
 
 ### 6. Configure Automatic Mounting
 
@@ -127,8 +145,6 @@ Test:
 sudo mount -a
 ```
 
----
-
 ### 7. Accessing the SSD
 
 ```bash
@@ -141,9 +157,197 @@ Check mount locations:
 ```bash
 lsblk -f
 ```
+---
+## Setup Cloud
+
+### Zerotier Setup
+#### Create Zerotier Network
+1. Log in ZeroTier Central: https://my.zerotier.com
+2. Create network
+3. Get Network ID: 8056c2e21cxxxxxx
+#### Add PC to Zerotier Network
+```sh
+# Add PC to Zerotier Network
+sudo zerotier-cli join 8056c2e21cxxxxxx
+
+# Check status
+sudo zerotier-cli listnetworks
+
+# Back to ZeroTier Central, click 'Auth' in 'Members' to authorize device
+
+# Check IP
+ip addr
+# For example
+10.147.20.5
+```
+### Nextcloud
+```sh
+# Create folder
+mkdir ~/nextcloud
+cd ~/nextcloud
+
+# Create config file
+nano compose.yml
+
+# Start up Nextcloud
+docker compose up -d
+
+# Check status
+docker ps
+```
+compose.yml:
+```sh
+services:
+
+  db:
+    image: mariadb:11
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpass
+      MYSQL_DATABASE: nextcloud
+      MYSQL_USER: nextcloud
+      MYSQL_PASSWORD: nextcloudpass
+
+    volumes:
+      - db:/var/lib/mysql
+
+  app:
+    image: nextcloud
+    restart: always
+    ports:
+      - "8081:80"
+
+    environment:
+      MYSQL_DATABASE: nextcloud
+      MYSQL_USER: nextcloud
+      MYSQL_PASSWORD: nextcloudpass
+      MYSQL_HOST: db
+
+    volumes:
+      - /mnt/data/nextcloud:/var/www/html
+
+volumes:
+  db:
+```
+Log in for the fisrt time and create admin account:
+```sh
+# Open web brouser and enter
+http://ZIMABOARD_IP:8081
+```
+
+## Automatic Backup Setup
+Two SATA SSDs will be set up, and data will be synchrized to backup everyday:
+```sh
+SSD1: /mnt/data
+SSD2: /mnt/backup
+```
+
+```sh
+# Modify config file
+sudo nano /etc/rsnapshot.conf
+
+# Change
+snapshot_root   /var/cache/rsnapshot/
+# To
+snapshot_root   /mnt/backup/rsnapshot/
+
+# Modify
+retain  daily   7
+retain  weekly  4
+retain  monthly 3
+
+cmd_rsync      /usr/bin/rsync
+
+# Change
+backup  /home/          localhost/
+# To
+backup  /mnt/data/      data/
+
+# Check status
+sudo rsnapshot configtest
+# Output
+Syntax OK
+
+# Manual
+sudo rsnapshot daily
+tree -L 2 /mnt/backup/rsnapshot
+#rsnapshot
+#└── daily.0
+#    └── data
+
+# Check
+du -sh /mnt/backup/rsnapshot
+```
+
+Automatic Synchronization
+
+Ubuntu 24.04 systemd timer
+
+创建：
+
+sudo nano /etc/systemd/system/rsnapshot-daily.service
+[Unit]
+Description=rsnapshot daily backup
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/rsnapshot daily
+
+创建：
+
+sudo nano /etc/systemd/system/rsnapshot-daily.timer
+[Unit]
+Description=Run rsnapshot daily
+
+[Timer]
+OnCalendar=03:00
+Persistent=true
+
+[Install]
+WantedBy=timers.target
+
+```sh
+# Start service
+sudo systemctl daemon-reload
+sudo systemctl enable rsnapshot-daily.timer
+sudo systemctl start rsnapshot-daily.timer
+
+# Check
+systemctl list-timers
+```
+How to recover files
+```sh
+# If deleted
+/mnt/data/report.docx
+# Recover by
+cp /mnt/backup/rsnapshot/daily.1/data/report.docx /mnt/data/
+```
+
+对于你的 1TB SSD 推荐配置
+
+假设 SSD2 也是 1TB：
+
+retain daily 7
+retain weekly 4
+retain monthly 2
+
+一个更稳妥的配置
+
+在 /etc/rsnapshot.conf 中增加：
+
+link_dest 1
+
+并确保备份项为：
+
+backup /mnt/data/ data/
+
+然后在同步前先确认备份盘已挂载：
+
+mountpoint -q /mnt/backup || exit 1
+
+避免 SSD2 掉线时把数据写到系统盘目录里。
 
 ---
-
 ## USB Wi‑Fi Setup
 
 Detect the adapter:
