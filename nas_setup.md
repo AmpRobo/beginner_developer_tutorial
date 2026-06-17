@@ -181,7 +181,47 @@ ip addr
 10.147.20.5
 ```
 ### Nextcloud
+
 ```sh
+# Install by snap
+sudo snap install nextcloud
+# Initialize and create admin account (recommand access from web page with IP directly)
+sudo nextcloud.manual-install admin 'admin'
+
+# Check the IP
+sudo nextcloud.occ config:system:get trusted_domains
+# You will see something like:
+# 0 => localhost
+# 1 => 192.168.3.221
+# 2 => 10.181.44.10
+# Set up public IP
+sudo nextcloud.occ config:system:set trusted_domains 1 --value=ZIMABOARD_IP
+
+# Check storage folder
+sudo nextcloud.occ config:system:get datadirectory
+# Output is like: /var/snap/nextcloud/common/nextcloud/data
+
+# Stop nextcloud
+sudo snap stop nextcloud
+# Create folder
+sudo mkdir -p /mnt/data/nextcloud/data
+# Allow access to external disk
+sudo snap connect nextcloud:removable-media
+
+# Edit config file
+sudo nano /var/snap/nextcloud/current/nextcloud/config/config.php
+# Find "'datadirectory' => '/var/snap/nextcloud/common/nextcloud/data',", change to
+'datadirectory' => '/mnt/data/nextcloud/data',
+# Change access
+sudo chown -R root:www-data /mnt/data/nextcloud/data
+sudo chmod -R 750 /mnt/data/nextcloud/data
+
+# Start Nextcloud
+sudo snap start nextcloud
+# Check folder path again
+sudo nextcloud.occ config:system:get datadirectory
+```
+<!-- ```sh
 # Create folder
 mkdir ~/nextcloud
 cd ~/nextcloud
@@ -228,14 +268,16 @@ services:
 
 volumes:
   db:
-```
-Log in for the fisrt time and create admin account:
+``` -->
+Log in for the fisrt time and create account:
 ```sh
 # Open web brouser and enter
-http://ZIMABOARD_IP:8081
+http://ZIMABOARD_IP
 ```
 
 ## Automatic Backup Setup
+
+### Setup rsnapshot
 Two SATA SSDs will be set up, and data will be synchrized to backup everyday:
 ```sh
 SSD1: /mnt/data
@@ -279,13 +321,12 @@ tree -L 2 /mnt/backup/rsnapshot
 du -sh /mnt/backup/rsnapshot
 ```
 
-Automatic Synchronization
-
+### Automatic Synchronization
 Ubuntu 24.04 systemd timer
-
-创建：
-
+```sh
+# Create service
 sudo nano /etc/systemd/system/rsnapshot-daily.service
+# Add following to rsnapshot-daily.service
 [Unit]
 Description=rsnapshot daily backup
 
@@ -293,9 +334,9 @@ Description=rsnapshot daily backup
 Type=oneshot
 ExecStart=/usr/bin/rsnapshot daily
 
-创建：
-
+# Cteate timer
 sudo nano /etc/systemd/system/rsnapshot-daily.timer
+# Add following to rsnapshot-daily.timer
 [Unit]
 Description=Run rsnapshot daily
 
@@ -306,7 +347,6 @@ Persistent=true
 [Install]
 WantedBy=timers.target
 
-```sh
 # Start service
 sudo systemctl daemon-reload
 sudo systemctl enable rsnapshot-daily.timer
@@ -315,6 +355,7 @@ sudo systemctl start rsnapshot-daily.timer
 # Check
 systemctl list-timers
 ```
+
 How to recover files
 ```sh
 # If deleted
